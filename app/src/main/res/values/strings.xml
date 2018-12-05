@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FirstProject</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="Converti">Convertí tus millas</string>
+    <string name="ingresar_millas">ingresar las millas</string>
+    <string name="millas">millas</string>
+
+</resources>
