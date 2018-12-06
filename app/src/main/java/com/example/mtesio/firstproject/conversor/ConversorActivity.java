@@ -1,4 +1,4 @@
-package com.example.mtesio.firstproject;
+package com.example.mtesio.firstproject.conversor;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -10,14 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mtesio.firstproject.model.Conversor;
+import com.example.mtesio.firstproject.R;
 
-public class MainActivity extends AppCompatActivity {
+public class ConversorActivity extends AppCompatActivity implements ConversorView{
 
     private TextInputEditText textInput;
     private Button buttonConverter;
     private TextView cantidadDeKm;
-    private Conversor conversor;
+    private ConversorPresenter conversorPresenter;
 
 
     @Override
@@ -25,14 +25,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonConverter = (Button) findViewById(R.id.convertir_button);
-        textInput = (TextInputEditText) findViewById(R.id.millas_input);
-        cantidadDeKm = (TextView) findViewById(R.id.result_number_text_view);
-        conversor = new Conversor();
+        buttonConverter = findViewById(R.id.convertir_button);
+        textInput = findViewById(R.id.millas_input);
+        cantidadDeKm = findViewById(R.id.result_number_text_view);
+
+        conversorPresenter = new ConversorPresenter(this, new Conversor());
 
         buttonConverter.setOnClickListener(buttonListener);
         textInput.addTextChangedListener(inputTextWatcher);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        conversorPresenter.onDestroy();
+        super.onDestroy();
     }
 
     private TextWatcher inputTextWatcher = new TextWatcher() {
@@ -43,12 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(!textInput.getText().toString().isEmpty() &&  Double.parseDouble(textInput.getText().toString()) > 0 ){
-                conversor.setMillas(Double.parseDouble(textInput.getText().toString()));
-            }else{
-                Toast.makeText(MainActivity.this, "Ingresa un valor ameo",
-                        Toast.LENGTH_LONG).show();
-            }
+            if(conversorPresenter.isInputOK(textInput.getText().toString()))
+                conversorPresenter.setMillasInModel(Double.parseDouble(textInput.getText().toString()));
         }
 
         @Override
@@ -60,13 +63,24 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(!textInput.getText().toString().isEmpty() &&  Double.parseDouble(textInput.getText().toString()) > 0 ){
-                conversor.convertir();
-                cantidadDeKm.setText(Double.toString(conversor.getKilometros()));
-            }else{
-                Toast.makeText(v.getContext(), "Ingresa un valor ameo",
-                        Toast.LENGTH_LONG).show();
-            }
+            conversorPresenter.convertirMillasAKm();
         }
     };
+
+    @Override
+    public void setCantidadDeKm(double km) {
+        cantidadDeKm.setText(Double.toString(km));
+
+    }
+
+    @Override
+    public String getTextFromInput (){
+        return textInput.getText().toString();
+    }
+
+    @Override
+    public void showError(String message){
+        Toast.makeText(this, message,
+                Toast.LENGTH_LONG).show();
+    }
 }

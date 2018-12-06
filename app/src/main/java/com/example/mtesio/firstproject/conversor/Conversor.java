@@ -1,4 +1,4 @@
-package com.example.mtesio.firstproject.model;
+package com.example.mtesio.firstproject.conversor;
 
 public class Conversor {
 
