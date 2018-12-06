@@ -1,5 +1,6 @@
 package com.example.mtesio.firstproject.conversor;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +16,7 @@ import com.example.mtesio.firstproject.R;
 public class ConversorActivity extends AppCompatActivity implements ConversorView{
 
     private TextInputEditText textInput;
-    private Button buttonConverter;
-    private TextView cantidadDeKm;
+    protected TextView cantidadDeKm;
     private ConversorPresenter conversorPresenter;
 
 
@@ -25,7 +25,7 @@ public class ConversorActivity extends AppCompatActivity implements ConversorVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonConverter = findViewById(R.id.convertir_button);
+        Button buttonConverter = findViewById(R.id.convertir_button);
         textInput = findViewById(R.id.millas_input);
         cantidadDeKm = findViewById(R.id.result_number_text_view);
 
@@ -50,8 +50,9 @@ public class ConversorActivity extends AppCompatActivity implements ConversorVie
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(conversorPresenter.isInputOK(textInput.getText().toString()))
+            if(conversorPresenter.isInputOK(textInput.getText().toString())) {
                 conversorPresenter.setMillasInModel(Double.parseDouble(textInput.getText().toString()));
+            }
         }
 
         @Override
@@ -67,9 +68,10 @@ public class ConversorActivity extends AppCompatActivity implements ConversorVie
         }
     };
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void setCantidadDeKm(double km) {
-        cantidadDeKm.setText(Double.toString(km));
+        cantidadDeKm.setText(String.format(Double.toString(km), "2%f"));
 
     }
 

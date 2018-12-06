@@ -2,6 +2,8 @@ package com.example.mtesio.firstproject.conversor;
 
 public class ConversorPresenter {
 
+    private final String ERROR_MESSAGE = "Ingresa un valor ameo";
+
     private ConversorView view;
     private Conversor conversor;
 
@@ -18,7 +20,7 @@ public class ConversorPresenter {
         if (view != null && isInputOK(view.getTextFromInput())) {
             conversor.setMillas(millas);
         } else {
-            view.showError("Ingresa un valor ameo");
+            view.showError(ERROR_MESSAGE);
         }
     }
 
@@ -27,11 +29,15 @@ public class ConversorPresenter {
             conversor.convertir();
             view.setCantidadDeKm(conversor.getKilometros());
         } else {
-            view.showError("Ingresa un valor ameo");
+            view.showError(ERROR_MESSAGE);
         }
     }
 
+    public ConversorView getView() {
+        return view;
+    }
+
     public boolean isInputOK(String input){
-        return !(input.isEmpty() ||  Double.parseDouble(input) < 0 );
+        return !( input == null || input.isEmpty() ||  Double.parseDouble(input) < 0 );
     }
 }
